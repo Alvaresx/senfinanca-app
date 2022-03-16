@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Toolbar,
@@ -10,6 +10,33 @@ import {
 import { Add, Remove } from "@mui/icons-material";
 
 function Dashboard() {
+  const [transacoesEntrada, setTransacoesEntrada] = useState([]);
+  const [transacoesSaida, setTransacoesSaida] = useState([]);
+  const [subtotalEntrada, setSubtotalEntrada] = useState("");
+  const [subtotalSaida, setSubtotalSaida] = useState("");
+  const [subtotalConta, setSubtotalConta] = useState("");
+
+  useEffect(() => {
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    let entrada = getDataStorage.filter((value) => value.tipo === "Entrada");
+    let saida = getDataStorage.filter((value) => value.tipo === "Saída");
+    setTransacoesEntrada(entrada);
+    setTransacoesSaida(saida);
+    let somaEntrada = 0;
+    let somaSaida = 0;
+
+    for (let i = 0; i < entrada.length; i++) {
+      somaEntrada += parseInt(entrada[i].valor);
+    }
+
+    for (let i = 0; i < saida.length; i++) {
+      somaSaida += parseInt(saida[i].valor);
+    }
+    setSubtotalEntrada(somaEntrada);
+    setSubtotalSaida(somaSaida);
+    setSubtotalConta(somaEntrada - somaSaida)
+  }, []);
+
   return (
     <Box
       component="main"
@@ -47,7 +74,9 @@ function Dashboard() {
                   />
                 </Grid>
                 <Grid item>
-                  <Typography variant="h5">12</Typography>
+                  <Typography variant="h5">
+                    {transacoesEntrada.length}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Transações de Entrada
                   </Typography>
@@ -59,7 +88,7 @@ function Dashboard() {
         <Grid item lg={4} md={6}>
           <Card variant="outlined">
             <CardContent>
-            <Grid container alignItems="center">
+              <Grid container alignItems="center">
                 <Grid item>
                   <Remove
                     style={{
@@ -73,20 +102,24 @@ function Dashboard() {
                   />
                 </Grid>
                 <Grid item>
-                <Typography variant="h5">5</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Transações de Saída
-              </Typography>
+                  <Typography variant="h5">{transacoesSaida.length}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Transações de Saída
+                  </Typography>
                 </Grid>
               </Grid>
-              
             </CardContent>
           </Card>
         </Grid>
         <Grid item lg={4} md={6}>
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="h5">R$ 2.000,00</Typography>
+              <Typography variant="h5">
+                {subtotalEntrada.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Subtotal de Entrada
               </Typography>
@@ -96,7 +129,12 @@ function Dashboard() {
         <Grid item lg={4} md={6}>
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="h5">R$ 2.000,00</Typography>
+              <Typography variant="h5">
+                {subtotalSaida.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Subtotal de Saída
               </Typography>
@@ -106,7 +144,12 @@ function Dashboard() {
         <Grid item lg={4} md={6}>
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="h5">R$ 2.000,00</Typography>
+              <Typography variant="h5">
+                {subtotalConta.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Subtotal da Conta
               </Typography>

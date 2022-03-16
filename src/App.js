@@ -1,14 +1,17 @@
 import "./App.css";
 import MyRoutes from "./Routes";
 import Drawer from "./components/Drawer";
+import { SnackbarProvider } from "notistack";
 
 function App() {
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <Drawer />
-        <MyRoutes />
-      </div>
+      <SnackbarProvider>
+        <div style={{ display: "flex" }}>
+          <Drawer />
+          <MyRoutes />
+        </div>
+      </SnackbarProvider>
     </>
   );
 }

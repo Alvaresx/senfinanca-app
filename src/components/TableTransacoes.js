@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSnackbar } from "notistack";
 import {
   Box,
   Toolbar,
@@ -25,20 +26,22 @@ import {
 import { Delete, Edit } from "@mui/icons-material";
 
 function TableTransacoes() {
-  const [rows, setRows] = useState([
-    {
-      titulo: "Mariana",
-      tipo: "Entrada",
-      categoria: "Alimentação",
-      valor: "R$ 2.000,00",
-      data: "16/03/2022",
-    },
-  ]);
+  const { enqueueSnackbar } = useSnackbar();
+  const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
+  const [titulo, setTitulo] = useState("");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [dataLogStorage] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  useEffect(() => {
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    if (getDataStorage !== null) {
+      setRows(getDataStorage);
+    } else {
+      setRows([]);
+    }
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -47,6 +50,32 @@ function TableTransacoes() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleOpenDeleteDialog = (titulo) => {
+    setOpenDeleteDialog(true);
+    setTitulo(titulo);
+  };
+
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+
+  const handleDeleteTransaction = () => {
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    for (let i = 0; i < getDataStorage.length; i++) {
+      if (getDataStorage[i].titulo === titulo) {
+        getDataStorage.splice(i, 1);
+      }
+    }
+    setRows(getDataStorage);
+    let dataStringfy = JSON.stringify(getDataStorage);
+    localStorage.setItem("transacoes", dataStringfy);
+    enqueueSnackbar("Transação excluída com sucesso!", {
+      variant: "success",
+      anchorOrigin: { horizontal: "right", vertical: "top" },
+    });
+    setOpenDeleteDialog(false);
   };
 
   return (
@@ -62,15 +91,19 @@ function TableTransacoes() {
       >
         <Toolbar />
         <Grid container>
-        <Grid item lg={12} md={12}>
-          <Typography variant="h5" sx={{ fontWeight: "700", color: "#4e4f50" }}>
-            Transações
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Aqui você poderá visualizar as informações das suas transações, bem como editar e/ou excluí-las.
-          </Typography>
+          <Grid item lg={12} md={12}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "700", color: "#4e4f50" }}
+            >
+              Transações
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Aqui você poderá visualizar as informações das suas transações,
+              bem como editar e/ou excluí-las.
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
         <TableContainer component={Paper} sx={{ marginTop: "24px" }}>
           <Table size="small" aria-label="a dense table">
             <TableHead>
@@ -102,13 +135,13 @@ function TableTransacoes() {
                   <TableCell align="center">{row.data}</TableCell>
                   <TableCell align="center">
                     <Tooltip title="Editar" placement="left">
-                      <IconButton>
+                      <IconButton onClick={handleOpenEditDialog}>
                         <Edit />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Excluir" placement="right">
                       <IconButton
-                      // onClick={() => handleOpenDeleteDialog(row.cpf, row.nome)}
+                        onClick={() => handleOpenDeleteDialog(row.titulo)}
                       >
                         <Delete />
                       </IconButton>
@@ -143,37 +176,34 @@ function TableTransacoes() {
         </TableContainer>
       </Box>
 
-      {/* DIALOG DE EXCLUSÃO DO USUÁRIO */}
+      {/* DIALOG DE EXCLUSÃO DA TRANSAÇÃO */}
       <Dialog
         onClose={() => setOpenDeleteDialog(false)}
         open={openDeleteDialog}
       >
-        <DialogTitle>Excluir usuário</DialogTitle>
+        <DialogTitle>Excluir transação</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Tem certeza que deseja excluir este usuário?
+            Tem certeza que deseja excluir esta transação?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDeleteDialog(false)}>Cancelar</Button>
-          <Button /*onClick={handleDeleteUser}*/>Excluir</Button>
+          <Button onClick={handleDeleteTransaction}>Excluir</Button>
         </DialogActions>
       </Dialog>
 
-      {/* DIALOG DE EDIÇÃO DO USUÁRIO */}
-      <Dialog
-        onClose={() => setOpenDeleteDialog(false)}
-        open={openDeleteDialog}
-      >
-        <DialogTitle>Excluir usuário</DialogTitle>
+      {/* DIALOG DE EDIÇÃO DA TRANSAÇÃO */}
+      <Dialog onClose={() => setOpenEditDialog(false)} open={openEditDialog}>
+        <DialogTitle>Editar transação</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Tem certeza que deseja excluir este usuário?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancelar</Button>
-          <Button /*onClick={handleDeleteUser}*/>Excluir</Button>
+          <Button onClick={() => setOpenEditDialog(false)}>Cancelar</Button>
+          <Button /*onClick={handleDeleteUser}*/>Ok</Button>
         </DialogActions>
       </Dialog>
     </>
