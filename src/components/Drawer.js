@@ -89,7 +89,7 @@ function Drawer() {
           >
             <Menu sx={{fill: "#4e4f50"}} />
           </IconButton>
-          <img src={Logo} alt="Logo da SenFinança" />
+          <img src={Logo} width="200px" alt="Logo da SenFinança" />
         </Toolbar>
       </AppBar>
       <Box
