@@ -1,10 +1,14 @@
 import "./App.css";
 import MyRoutes from "./Routes";
+import Drawer from "./components/Drawer";
 
 function App() {
   return (
     <>
-      <MyRoutes />
+      <div style={{ display: "flex" }}>
+        <Drawer />
+        <MyRoutes />
+      </div>
     </>
   );
 }
