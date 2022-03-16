@@ -7,7 +7,6 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  Typography,
   AppBar,
   Toolbar,
   IconButton,

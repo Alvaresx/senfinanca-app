@@ -41,7 +41,7 @@ function RegistroTransacao() {
           </Typography>
         </Grid>
       </Grid>
-      <Paper elevation={3} sx={{ padding: "24px", marginTop: "24px" }}>
+      <Paper elevation={2} sx={{ padding: "24px", marginTop: "24px" }}>
         <Grid container spacing={3}>
           <Grid item lg={3}>
             <TextField label="Título" fullWidth />
