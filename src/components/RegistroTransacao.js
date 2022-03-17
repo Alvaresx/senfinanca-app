@@ -109,7 +109,7 @@ function RegistroTransacao() {
             >
               <Toolbar />
               <Grid container>
-                <Grid item lg={12} md={12}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
                   <Typography
                     variant="h5"
                     sx={{ fontWeight: "700", color: "#4e4f50" }}
@@ -123,13 +123,13 @@ function RegistroTransacao() {
               </Grid>
               <Paper elevation={2} sx={{ padding: "24px", marginTop: "24px" }}>
                 <Grid container spacing={3}>
-                  <Grid item lg={3} md={3} sm={3}>
+                  <Grid item lg={3} md={3} sm={3} xs={12}>
                     <TextFieldWrapper name="titulo" label="Título" />
                   </Grid>
-                  <Grid item lg={3} md={3} sm={3}>
+                  <Grid item lg={3} md={3} sm={3} xs={12}>
                     <TextFieldWrapper name="valor" label="Valor" />
                   </Grid>
-                  <Grid item lg={3} md={3} sm={3}>
+                  <Grid item lg={3} md={3} sm={3} xs={12}>
                     <TextFieldWrapper select name="tipo" label="Tipo">
                       {tipos.map((option) => (
                         <MenuItem key={option} value={option}>
@@ -138,7 +138,7 @@ function RegistroTransacao() {
                       ))}
                     </TextFieldWrapper>
                   </Grid>
-                  <Grid item lg={3} md={3} sm={3}>
+                  <Grid item lg={3} md={3} sm={3} xs={12}>
                     <TextFieldWrapper select name="categoria" label="Categoria">
                       {categorias.map((option) => (
                         <MenuItem key={option} value={option}>
@@ -149,7 +149,7 @@ function RegistroTransacao() {
                   </Grid>
                 </Grid>
                 <Grid container justifyContent="center">
-                  <Grid item lg={2}>
+                  <Grid item lg={2} md={2} sm={2} xs={6}>
                     <Button
                       variant="contained"
                       type="submit"
