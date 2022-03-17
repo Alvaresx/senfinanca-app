@@ -16,8 +16,11 @@ import {
   IconButton,
   Grid,
   Typography,
+  TextField,
+  MenuItem,
+  Button,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, FilterList } from "@mui/icons-material";
 import ExcluirTransacao from "./ExcluirTransação";
 import EditarTransacao from "./EditarTransação";
 import Context from "../Context";
@@ -25,6 +28,15 @@ import { dataAtualFormatada } from "../utils/DataFormatada";
 
 function TableTransacoes() {
   const { enqueueSnackbar } = useSnackbar();
+  const [tipos] = useState(["Entrada", "Saída", "Todos"]);
+  const [categorias] = useState([
+    "Alimentação",
+    "Educação",
+    "Entretenimento",
+    "Saúde",
+    "Transporte",
+    "Todas",
+  ]);
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [titulo, setTitulo] = useState("");
@@ -34,6 +46,8 @@ function TableTransacoes() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [tipoFilter, setTipoFilter] = useState("");
+  const [categoriaFilter, setCategoriaFilter] = useState("");
 
   useEffect(() => {
     let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
@@ -104,6 +118,37 @@ function TableTransacoes() {
     setOpenEditDialog(false);
   };
 
+  const handleFilterTipo = (tipo) => {
+    setTipoFilter(tipo);
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    let tipoSelected = rows.filter((value) => value.tipo === tipo);
+    if (tipo === "Todos") {
+      setRows(getDataStorage);
+    } else {
+      setRows(tipoSelected);
+    }
+  };
+
+  const handleFilterCategoria = (categoria) => {
+    setCategoriaFilter(categoria);
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    let categoriaSelected = rows.filter(
+      (value) => value.categoria === categoria
+    );
+    if (categoria === "Todas") {
+      setRows(getDataStorage);
+    } else {
+      setRows(categoriaSelected);
+    }
+  };
+
+  const handleResetFilters = () => {
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    setTipoFilter("");
+    setCategoriaFilter("");
+    setRows(getDataStorage);
+  };
+
   return (
     <>
       <Context.Provider
@@ -145,6 +190,59 @@ function TableTransacoes() {
             </Grid>
           </Grid>
           <TableContainer component={Paper} sx={{ marginTop: "24px" }}>
+            <Grid
+              container
+              spacing={1}
+              alignItems="center"
+              sx={{ padding: "16px" }}
+            >
+              <Grid item>
+                <Typography variant="body2" color="text.secondary">
+                  Filtros:
+                </Typography>
+              </Grid>
+              <Grid item lg={2} md={3} sm={3} xs={3}>
+                <TextField
+                  select
+                  size="small"
+                  label="Tipo"
+                  value={tipoFilter}
+                  fullWidth
+                  onChange={(e) => handleFilterTipo(e.target.value)}
+                >
+                  {tipos.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item lg={2} md={3} sm={3} xs={3}>
+                <TextField
+                  select
+                  size="small"
+                  label="Categoria"
+                  value={categoriaFilter}
+                  fullWidth
+                  onChange={(e) => handleFilterCategoria(e.target.value)}
+                >
+                  {categorias.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item lg={2}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleResetFilters}
+                >
+                  Resetar
+                </Button>
+              </Grid>
+            </Grid>
             <Table size="small" aria-label="a dense table">
               <TableHead>
                 <TableRow>
