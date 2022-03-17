@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import {
   Box,
@@ -27,6 +27,9 @@ function TableTransacoes() {
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [titulo, setTitulo] = useState("");
+  const [valor, setValor] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [tipo, setTipo] = useState("");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -54,7 +57,11 @@ function TableTransacoes() {
     setTitulo(titulo);
   };
 
-  const handleOpenEditDialog = () => {
+  const handleOpenEditDialog = (titulo, tipo, categoria, valor) => {
+    setTitulo(titulo);
+    setTipo(tipo);
+    setCategoria(categoria);
+    setValor(valor);
     setOpenEditDialog(true);
   };
 
@@ -75,6 +82,24 @@ function TableTransacoes() {
     setOpenDeleteDialog(false);
   };
 
+  const handleEditTransaction = () => {
+    console.log("entrou")
+    // let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    // for (let i = 0; i < getDataStorage.length; i++) {
+    //   if (getDataStorage[i].titulo === titulo) {
+    //     getDataStorage.splice(i, 1);
+    //   }
+    // }
+    // setRows(getDataStorage);
+    // let dataStringfy = JSON.stringify(getDataStorage);
+    // localStorage.setItem("transacoes", dataStringfy);
+    // enqueueSnackbar("Transação editada com sucesso!", {
+    //   variant: "success",
+    //   anchorOrigin: { horizontal: "right", vertical: "top" },
+    // });
+    // setOpenEditDialog(false);
+  };
+
   return (
     <>
       <Context.Provider
@@ -84,6 +109,11 @@ function TableTransacoes() {
           openEditDialog,
           setOpenEditDialog,
           handleDeleteTransaction,
+          handleEditTransaction,
+          titulo,
+          categoria,
+          valor,
+          tipo,
         }}
       >
         <Box
@@ -141,7 +171,14 @@ function TableTransacoes() {
                     <TableCell align="center">{row.data}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Editar" placement="left">
-                        <IconButton onClick={handleOpenEditDialog}>
+                        <IconButton
+                          onClick={() => handleOpenEditDialog(
+                            row.titulo,
+                            row.tipo,
+                            row.categoria,
+                            row.valor
+                          )}
+                        >
                           <Edit />
                         </IconButton>
                       </Tooltip>
