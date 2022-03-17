@@ -5,7 +5,7 @@ export function dataAtualFormatada() {
   var mes = (data.getMonth() + 1).toString();
   var mesF = mes.length === 1 ? "0" + mes : mes;
   var anoF = data.getFullYear();
-  var hora = data.getHours();
+  var hora = data.getHours() < 10 ? "0" + data.getHours() : data.getHours();
   var minuto =
     data.getMinutes() < 10 ? "0" + data.getMinutes() : data.getMinutes();
   var segundos =
