@@ -48,9 +48,13 @@ function TableTransacoes() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [tipoFilter, setTipoFilter] = useState("");
   const [categoriaFilter, setCategoriaFilter] = useState("");
+  const [tipoSelected, setTipoSelected] = useState([]);
+  const [categoriaSelected, setCategoriaSelected] = useState([]);
+  const [getDataStorage] = useState(
+    JSON.parse(localStorage.getItem("transacoes"))
+  );
 
   useEffect(() => {
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
     if (getDataStorage !== null) {
       setRows(getDataStorage);
     } else {
@@ -81,7 +85,6 @@ function TableTransacoes() {
   };
 
   const handleDeleteTransaction = () => {
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
     for (let i = 0; i < getDataStorage.length; i++) {
       if (getDataStorage[i].titulo === titulo) {
         getDataStorage.splice(i, 1);
@@ -98,7 +101,6 @@ function TableTransacoes() {
   };
 
   const handleEditTransaction = (values) => {
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
     for (let i = 0; i < getDataStorage.length; i++) {
       if (getDataStorage[i].titulo === titulo) {
         getDataStorage[i].titulo = values.titulo;
@@ -120,30 +122,49 @@ function TableTransacoes() {
 
   const handleFilterTipo = (tipo) => {
     setTipoFilter(tipo);
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
-    let tipoSelected = rows.filter((value) => value.tipo === tipo);
-    if (tipo === "Todos") {
-      setRows(getDataStorage);
+    let selected = [];
+    if (categoriaFilter !== "" && categoriaFilter !== "Todas") {
+      selected = categoriaSelected.filter((value) => value.tipo === tipo);
     } else {
-      setRows(tipoSelected);
+      selected = getDataStorage.filter((value) => value.tipo === tipo);
+    }
+    setTipoSelected(selected);
+    if (
+      tipo === "Todos" &&
+      (categoriaFilter === "" || categoriaFilter === "Todas")
+    ) {
+      setRows(getDataStorage);
+    } else if (tipo === "Todos" && categoriaFilter !== "") {
+      setRows(categoriaSelected);
+    } else {
+      setRows(selected);
     }
   };
 
   const handleFilterCategoria = (categoria) => {
     setCategoriaFilter(categoria);
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
-    let categoriaSelected = rows.filter(
-      (value) => value.categoria === categoria
-    );
-    if (categoria === "Todas") {
-      setRows(getDataStorage);
+    let selected = [];
+    if (tipoFilter !== "" && tipoFilter !== "Todos") {
+      selected = tipoSelected.filter((value) => value.categoria === categoria);
     } else {
-      setRows(categoriaSelected);
+      selected = getDataStorage.filter(
+        (value) => value.categoria === categoria
+      );
+    }
+    setCategoriaSelected(selected);
+    if (
+      categoria === "Todas" &&
+      (tipoFilter === "" || tipoFilter === "Todos")
+    ) {
+      setRows(getDataStorage);
+    } else if (categoria === "Todas" && tipoFilter !== "") {
+      setRows(tipoSelected);
+    } else {
+      setRows(selected);
     }
   };
 
   const handleResetFilters = () => {
-    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
     setTipoFilter("");
     setCategoriaFilter("");
     setRows(getDataStorage);
