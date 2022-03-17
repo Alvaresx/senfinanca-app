@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import TextFieldWrapper from "./FormComponents/TextField";
 
 function EditarTransacao() {
+  const formikRef = useRef(null)
   const [tipos] = useState(["Entrada", "Saída"]);
   const [categorias] = useState([
     "Alimentação",
@@ -33,6 +34,10 @@ function EditarTransacao() {
     categoria,
     tipo,
   } = useContext(Context);
+
+  const submitForm = () =>{
+    formikRef.current.submitForm()
+}
 
   const handleCloseDialog = () => {
     setOpenEditDialog(false);
@@ -62,10 +67,11 @@ function EditarTransacao() {
           </Typography>
         </DialogContentText>
         <Formik
+          innerRef={formikRef}
           initialValues={values}
           validationSchema={validationSchema}
-          onSubmit={(values, { resetForm }) => {
-            handleEditTransaction(values, resetForm);
+          onSubmit={(values) => {
+            handleEditTransaction(values);
           }}
         >
           <Form style={{ marginTop: "24px" }}>
@@ -100,7 +106,7 @@ function EditarTransacao() {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDialog}>Cancelar</Button>
-        <Button type="submit">Ok</Button>
+        <Button onClick={submitForm}>Ok</Button>
       </DialogActions>
     </Dialog>
   );

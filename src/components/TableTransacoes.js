@@ -21,6 +21,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import ExcluirTransacao from "./ExcluirTransação";
 import EditarTransacao from "./EditarTransação";
 import Context from "../Context";
+import { dataAtualFormatada } from "../utils/DataFormatada";
 
 function TableTransacoes() {
   const { enqueueSnackbar } = useSnackbar();
@@ -82,22 +83,25 @@ function TableTransacoes() {
     setOpenDeleteDialog(false);
   };
 
-  const handleEditTransaction = () => {
-    console.log("entrou")
-    // let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
-    // for (let i = 0; i < getDataStorage.length; i++) {
-    //   if (getDataStorage[i].titulo === titulo) {
-    //     getDataStorage.splice(i, 1);
-    //   }
-    // }
-    // setRows(getDataStorage);
-    // let dataStringfy = JSON.stringify(getDataStorage);
-    // localStorage.setItem("transacoes", dataStringfy);
-    // enqueueSnackbar("Transação editada com sucesso!", {
-    //   variant: "success",
-    //   anchorOrigin: { horizontal: "right", vertical: "top" },
-    // });
-    // setOpenEditDialog(false);
+  const handleEditTransaction = (values) => {
+    let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
+    for (let i = 0; i < getDataStorage.length; i++) {
+      if (getDataStorage[i].titulo === titulo) {
+        getDataStorage[i].titulo = values.titulo;
+        getDataStorage[i].categoria = values.categoria;
+        getDataStorage[i].valor = values.valor;
+        getDataStorage[i].tipo = values.tipo;
+        getDataStorage[i].data = dataAtualFormatada() + " (Editado)";
+      }
+    }
+    setRows(getDataStorage);
+    let dataStringfy = JSON.stringify(getDataStorage);
+    localStorage.setItem("transacoes", dataStringfy);
+    enqueueSnackbar("Transação editada com sucesso!", {
+      variant: "success",
+      anchorOrigin: { horizontal: "right", vertical: "top" },
+    });
+    setOpenEditDialog(false);
   };
 
   return (
@@ -172,12 +176,14 @@ function TableTransacoes() {
                     <TableCell align="center">
                       <Tooltip title="Editar" placement="left">
                         <IconButton
-                          onClick={() => handleOpenEditDialog(
-                            row.titulo,
-                            row.tipo,
-                            row.categoria,
-                            row.valor
-                          )}
+                          onClick={() =>
+                            handleOpenEditDialog(
+                              row.titulo,
+                              row.tipo,
+                              row.categoria,
+                              row.valor
+                            )
+                          }
                         >
                           <Edit />
                         </IconButton>

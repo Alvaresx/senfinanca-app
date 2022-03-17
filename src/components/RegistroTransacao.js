@@ -94,7 +94,6 @@ function RegistroTransacao() {
         validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
           handleRegister(values, resetForm);
-          console.log(values);
         }}
       >
         {({ setFieldValue }) => (
