@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSnackbar } from "notistack";
 import {
   Box,
@@ -14,16 +14,13 @@ import {
   Paper,
   Tooltip,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
   Grid,
   Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import ExcluirTransacao from "./ExcluirTransação";
+import EditarTransacao from "./EditarTransação";
+import Context from "../Context";
 
 function TableTransacoes() {
   const { enqueueSnackbar } = useSnackbar();
@@ -80,132 +77,117 @@ function TableTransacoes() {
 
   return (
     <>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { md: `calc(100% - 250px)` },
-          margin: "0 auto",
+      <Context.Provider
+        value={{
+          openDeleteDialog,
+          setOpenDeleteDialog,
+          openEditDialog,
+          setOpenEditDialog,
+          handleDeleteTransaction,
         }}
       >
-        <Toolbar />
-        <Grid container>
-          <Grid item lg={12} md={12}>
-            <Typography
-              variant="h5"
-              sx={{ fontWeight: "700", color: "#4e4f50" }}
-            >
-              Transações
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Aqui você poderá visualizar as informações das suas transações,
-              bem como editar e/ou excluí-las.
-            </Typography>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { md: `calc(100% - 250px)` },
+            margin: "0 auto",
+          }}
+        >
+          <Toolbar />
+          <Grid container>
+            <Grid item lg={12} md={12}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "700", color: "#4e4f50" }}
+              >
+                Transações
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Aqui você poderá visualizar as informações das suas transações,
+                bem como editar e/ou excluí-las.
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-        <TableContainer component={Paper} sx={{ marginTop: "24px" }}>
-          <Table size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Título</TableCell>
-                <TableCell align="center">Tipo</TableCell>
-                <TableCell align="center">Categoria</TableCell>
-                <TableCell align="center">Valor</TableCell>
-                <TableCell align="center">Data/Hora</TableCell>
-                <TableCell align="center">Ações</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : rows
-              ).map((row) => (
-                <TableRow
-                  key={row.titulo}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="center">{row.titulo}</TableCell>
-                  <TableCell align="center">{row.tipo}</TableCell>
-                  <TableCell align="center">{row.categoria}</TableCell>
-                  <TableCell align="center">{row.valor}</TableCell>
-                  <TableCell align="center">{row.data}</TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="Editar" placement="left">
-                      <IconButton onClick={handleOpenEditDialog}>
-                        <Edit />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Excluir" placement="right">
-                      <IconButton
-                        onClick={() => handleOpenDeleteDialog(row.titulo)}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+          <TableContainer component={Paper} sx={{ marginTop: "24px" }}>
+            <Table size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Título</TableCell>
+                  <TableCell align="center">Tipo</TableCell>
+                  <TableCell align="center">Categoria</TableCell>
+                  <TableCell align="center">Valor</TableCell>
+                  <TableCell align="center">Data/Hora</TableCell>
+                  <TableCell align="center">Ações</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[
-                    5,
-                    10,
-                    25,
-                    { label: "Todas", value: -1 },
-                  ]}
-                  colSpan={6}
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  labelRowsPerPage="Linhas por página:"
-                  labelDisplayedRows={({ from, to, count }) =>
-                    `${from}-${to} de ${count}`
-                  }
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      </Box>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? rows.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : rows
+                ).map((row) => (
+                  <TableRow
+                    key={row.titulo}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">{row.titulo}</TableCell>
+                    <TableCell align="center">{row.tipo}</TableCell>
+                    <TableCell align="center">{row.categoria}</TableCell>
+                    <TableCell align="center">{row.valor}</TableCell>
+                    <TableCell align="center">{row.data}</TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Editar" placement="left">
+                        <IconButton onClick={handleOpenEditDialog}>
+                          <Edit />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Excluir" placement="right">
+                        <IconButton
+                          onClick={() => handleOpenDeleteDialog(row.titulo)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "Todas", value: -1 },
+                    ]}
+                    colSpan={6}
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    labelRowsPerPage="Linhas por página:"
+                    labelDisplayedRows={({ from, to, count }) =>
+                      `${from}-${to} de ${count}`
+                    }
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Box>
 
-      {/* DIALOG DE EXCLUSÃO DA TRANSAÇÃO */}
-      <Dialog
-        onClose={() => setOpenDeleteDialog(false)}
-        open={openDeleteDialog}
-      >
-        <DialogTitle>Excluir transação</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Tem certeza que deseja excluir esta transação?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancelar</Button>
-          <Button onClick={handleDeleteTransaction}>Excluir</Button>
-        </DialogActions>
-      </Dialog>
+        {/* DIALOG DE EXCLUSÃO DA TRANSAÇÃO */}
+        {openDeleteDialog ? <ExcluirTransacao /> : null}
 
-      {/* DIALOG DE EDIÇÃO DA TRANSAÇÃO */}
-      <Dialog onClose={() => setOpenEditDialog(false)} open={openEditDialog}>
-        <DialogTitle>Editar transação</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Tem certeza que deseja excluir este usuário?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenEditDialog(false)}>Cancelar</Button>
-          <Button /*onClick={handleDeleteUser}*/>Ok</Button>
-        </DialogActions>
-      </Dialog>
+        {/* DIALOG DE EDIÇÃO DA TRANSAÇÃO */}
+        {openEditDialog ? <EditarTransacao /> : null}
+      </Context.Provider>
     </>
   );
 }
