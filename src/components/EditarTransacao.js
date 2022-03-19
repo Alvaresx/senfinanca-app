@@ -15,8 +15,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextFieldWrapper from "./FormComponents/TextField";
 
-function EditarTransacao() {
-  const formikRef = useRef(null)
+function EditarTransacao({ setOpenEditDialog }) {
+  const formikRef = useRef(null);
   const [tipos] = useState(["Entrada", "Saída"]);
   const [categorias] = useState([
     "Alimentação",
@@ -26,7 +26,6 @@ function EditarTransacao() {
     "Transporte",
   ]);
   const {
-    openEditDialog,
     setOpenEditDialog,
     handleEditTransaction,
     titulo,
@@ -35,9 +34,9 @@ function EditarTransacao() {
     tipo,
   } = useContext(Context);
 
-  const submitForm = () =>{
-    formikRef.current.submitForm()
-}
+  const submitForm = () => {
+    formikRef.current.submitForm();
+  };
 
   const handleCloseDialog = () => {
     setOpenEditDialog(false);
@@ -58,7 +57,7 @@ function EditarTransacao() {
   };
 
   return (
-    <Dialog onClose={handleCloseDialog} open={openEditDialog}>
+    <Dialog onClose={handleCloseDialog} open>
       <DialogTitle>Editar transação</DialogTitle>
       <DialogContent>
         <DialogContentText>

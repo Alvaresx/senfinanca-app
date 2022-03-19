@@ -20,9 +20,9 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { Delete, Edit, FilterList } from "@mui/icons-material";
-import ExcluirTransacao from "./ExcluirTransação";
-import EditarTransacao from "./EditarTransação";
+import { Delete, Edit } from "@mui/icons-material";
+import ExcluirTransacao from "./ExcluirTransacao";
+import EditarTransacao from "./EditarTransacao";
 import Context from "../Context";
 import { dataAtualFormatada } from "../utils/DataFormatada";
 
@@ -60,7 +60,7 @@ function TableTransacoes() {
     } else {
       setRows([]);
     }
-  }, []);
+  }, [getDataStorage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

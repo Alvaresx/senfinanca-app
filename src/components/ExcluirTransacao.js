@@ -10,7 +10,7 @@ import {
 import Context from "../Context";
 
 function ExcluirTransacao() {
-  const { openDeleteDialog, setOpenDeleteDialog, handleDeleteTransaction } =
+  const { setOpenDeleteDialog, handleDeleteTransaction } =
     useContext(Context);
 
   const handleCloseDialog = () => {
@@ -18,7 +18,7 @@ function ExcluirTransacao() {
   };
 
   return (
-    <Dialog onClose={handleCloseDialog} open={openDeleteDialog}>
+    <Dialog onClose={handleCloseDialog} open>
       <DialogTitle>Excluir transação</DialogTitle>
       <DialogContent>
         <DialogContentText>
