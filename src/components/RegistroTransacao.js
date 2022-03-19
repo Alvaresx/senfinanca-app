@@ -13,6 +13,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextFieldWrapper from "./FormComponents/TextField";
 import { dataAtualFormatada } from "../utils/DataFormatada";
+import { maskMoeda } from "../utils/Masks";
 
 function RegistroTransacao() {
   const { enqueueSnackbar } = useSnackbar();
@@ -126,7 +127,13 @@ function RegistroTransacao() {
                     <TextFieldWrapper name="titulo" label="Título" />
                   </Grid>
                   <Grid item lg={3} md={3} sm={3} xs={12}>
-                    <TextFieldWrapper name="valor" label="Valor" />
+                    <TextFieldWrapper
+                      name="valor"
+                      label="Valor"
+                      onKeyUp={(e) =>
+                        setFieldValue("valor", maskMoeda(e.target.value))
+                      }
+                    />
                   </Grid>
                   <Grid item lg={3} md={3} sm={3} xs={12}>
                     <TextFieldWrapper select name="tipo" label="Tipo">

@@ -3,8 +3,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import EditarTransacao from "../components/EditarTransacao";
 
-const mockedSetOpenEditDialog = jest.fn();
-
 describe("Componente EditarTransacao", () => {
   test("deve conter o título 'Editar transação' no dialog", () => {
     render(<EditarTransacao />);
@@ -54,13 +52,5 @@ describe("Componente EditarTransacao", () => {
     render(<EditarTransacao />);
     const okButton = screen.getByRole("button", { name: /Ok/i });
     expect(okButton).toBeInTheDocument();
-  });
-
-  test("deve fechar o dialog quando clicar no botão de cancelar", () => {
-    render(<EditarTransacao setOpenEditDialog={mockedSetOpenEditDialog} />);
-    const cancelarButton = screen.getByRole("button", { name: /Cancelar/i });
-    const dialog = screen.getByRole("dialog");
-    fireEvent.click(cancelarButton);
-    expect(dialog).not.toBeInTheDocument();
   });
 });
