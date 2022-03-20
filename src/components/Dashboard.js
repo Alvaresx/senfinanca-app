@@ -7,34 +7,42 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { Add, Remove, AttachMoney, KeyboardDoubleArrowUp, KeyboardDoubleArrowDown } from "@mui/icons-material";
+import {
+  Add,
+  Remove,
+  AttachMoney,
+  KeyboardDoubleArrowUp,
+  KeyboardDoubleArrowDown,
+} from "@mui/icons-material";
 
 function Dashboard() {
   const [transacoesEntrada, setTransacoesEntrada] = useState([]);
   const [transacoesSaida, setTransacoesSaida] = useState([]);
-  const [subtotalEntrada, setSubtotalEntrada] = useState("");
-  const [subtotalSaida, setSubtotalSaida] = useState("");
-  const [subtotalConta, setSubtotalConta] = useState("");
+  const [subtotalEntrada, setSubtotalEntrada] = useState("R$ 0,00");
+  const [subtotalSaida, setSubtotalSaida] = useState("R$ 0,00");
+  const [subtotalConta, setSubtotalConta] = useState("R$ 0,00");
 
   useEffect(() => {
     let getDataStorage = JSON.parse(localStorage.getItem("transacoes"));
-    let entrada = getDataStorage.filter((value) => value.tipo === "Entrada");
-    let saida = getDataStorage.filter((value) => value.tipo === "Saída");
-    setTransacoesEntrada(entrada);
-    setTransacoesSaida(saida);
-    let somaEntrada = 0;
-    let somaSaida = 0;
+    if (getDataStorage !== null) {
+      let entrada = getDataStorage.filter((value) => value.tipo === "Entrada");
+      let saida = getDataStorage.filter((value) => value.tipo === "Saída");
+      setTransacoesEntrada(entrada);
+      setTransacoesSaida(saida);
+      let somaEntrada = 0;
+      let somaSaida = 0;
 
-    for (let i = 0; i < entrada.length; i++) {
-      somaEntrada += parseInt(entrada[i].valor);
-    }
+      for (let i = 0; i < entrada.length; i++) {
+        somaEntrada += parseInt(entrada[i].valor);
+      }
 
-    for (let i = 0; i < saida.length; i++) {
-      somaSaida += parseInt(saida[i].valor);
+      for (let i = 0; i < saida.length; i++) {
+        somaSaida += parseInt(saida[i].valor);
+      }
+      setSubtotalEntrada(somaEntrada);
+      setSubtotalSaida(somaSaida);
+      setSubtotalConta(somaEntrada - somaSaida);
     }
-    setSubtotalEntrada(somaEntrada);
-    setSubtotalSaida(somaSaida);
-    setSubtotalConta(somaEntrada - somaSaida);
   }, []);
 
   return (

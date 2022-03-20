@@ -167,7 +167,11 @@ function TableTransacoes() {
   const handleResetFilters = () => {
     setTipoFilter("");
     setCategoriaFilter("");
-    setRows(getDataStorage);
+    if (getDataStorage !== null) {
+      setRows(getDataStorage);
+    } else {
+      setRows([]);
+    }
   };
 
   return (

@@ -9,7 +9,6 @@ function TextFieldWrapper({ name, ...otherProps }) {
     ...field,
     ...otherProps,
     fullWidth: true,
-    required: true,
   };
 
   if (data && data.touched && data.error) {
