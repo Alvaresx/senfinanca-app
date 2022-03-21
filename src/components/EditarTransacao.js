@@ -14,9 +14,10 @@ import Context from "../Context";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextFieldWrapper from "./FormComponents/TextField";
+import { maskMoeda } from "../utils/Masks";
 
 function EditarTransacao() {
-  const formikRef = useRef(null)
+  const formikRef = useRef(null);
   const [tipos] = useState(["Entrada", "Saída"]);
   const [categorias] = useState([
     "Alimentação",
@@ -34,9 +35,9 @@ function EditarTransacao() {
     tipo,
   } = useContext(Context);
 
-  const submitForm = () =>{
-    formikRef.current.submitForm()
-}
+  const submitForm = () => {
+    formikRef.current.submitForm();
+  };
 
   const handleCloseDialog = () => {
     setOpenEditDialog(false);
@@ -73,34 +74,42 @@ function EditarTransacao() {
             handleEditTransaction(values);
           }}
         >
-          <Form style={{ marginTop: "24px" }}>
-            <Grid container spacing={3}>
-              <Grid item lg={6} md={6} sm={6} xs={12}>
-                <TextFieldWrapper name="titulo" label="Título" />
+          {({ setFieldValue }) => (
+            <Form style={{ marginTop: "24px" }}>
+              <Grid container spacing={3}>
+                <Grid item lg={6} md={6} sm={6} xs={12}>
+                  <TextFieldWrapper name="titulo" label="Título" />
+                </Grid>
+                <Grid item lg={6} md={6} sm={6} xs={12}>
+                  <TextFieldWrapper
+                    name="valor"
+                    label="Valor"
+                    onKeyUp={(e) =>
+                      setFieldValue("valor", maskMoeda(e.target.value))
+                    }
+                  />
+                </Grid>
+                <Grid item lg={6} md={6} sm={6} xs={12}>
+                  <TextFieldWrapper select name="tipo" label="Tipo">
+                    {tipos.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextFieldWrapper>
+                </Grid>
+                <Grid item lg={6} md={6} sm={6} xs={12}>
+                  <TextFieldWrapper select name="categoria" label="Categoria">
+                    {categorias.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextFieldWrapper>
+                </Grid>
               </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={12}>
-                <TextFieldWrapper name="valor" label="Valor" />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={12}>
-                <TextFieldWrapper select name="tipo" label="Tipo">
-                  {tipos.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextFieldWrapper>
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={12}>
-                <TextFieldWrapper select name="categoria" label="Categoria">
-                  {categorias.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextFieldWrapper>
-              </Grid>
-            </Grid>
-          </Form>
+            </Form>
+          )}
         </Formik>
       </DialogContent>
       <DialogActions>
