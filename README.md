@@ -29,6 +29,7 @@ O teste possui diversos **requisitos**, dentre eles estão:
 - Notistack **(apresentação de snackbar com informações para o usuário)**
 - React Router **(controle de roteamento das páginas da aplicação)**
 - localStorage **(utilizado para persistência de dados)**
+- React Testing Library **(utilizado para testes unitários)**
 
 ### 🔎 Outras informações
 
@@ -36,9 +37,16 @@ O projeto foi criado pensando na **responsividade**, possibilitando ao usuário 
 
 Para executar o projeto, execute o comando `npm start`, acessando em http://localhost:3000 .
 
+### 🚀 Melhorias
+
+- Aplicar mais testes unitários
+- Utilizar styled-components para melhorar os elementos que necessitaram de estilização específica
+- Criação de filtro por data
+- Aprimorar código de criação dos cards do dashboard, afim de diminuir a quantidade de linhas de código, utilizando .map() para a criação
+
 ### 🙋‍♀️ Autor
 
 **Mariana Alvares da Silva Pinto** - _Desenvolvedora Front-end Júnior_ </br>
 ✉️ **E-mail**: mariana11areal@hotmail.com </br>
 📞 **Telefone/Whatsapp:** (24) 999987-7010 </br>
-<!-- 📌 **Link para acessar o projeto:** https://user-actions-app.vercel.app/ -->
+📌 **Link para acessar o projeto:** https://senfinanca-app.vercel.app/
